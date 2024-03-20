@@ -72,4 +72,4 @@ private fun TopAppBarPreview() {
             onIconClick = {}
         )
     }
-}    
+}
