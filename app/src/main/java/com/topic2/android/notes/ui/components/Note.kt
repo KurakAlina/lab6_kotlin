@@ -1,6 +1,7 @@
 package com.topic2.android.notes.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,14 +32,15 @@ fun Note(
     onNoteCheckedChange: (NoteModel) -> Unit = {}
 ) {
     val backgroundShape: Shape = RoundedCornerShape(4.dp)
-    Row (
+    Row(
         modifier = Modifier
             .padding(8.dp)
-            .shadow(1.dp)
+            .shadow(1.dp, backgroundShape)
             .fillMaxWidth()
             .heightIn(min = 64.dp)
             .background(Color.White, backgroundShape)
-        ) {
+            .clickable(onClick = { onNoteClick(note) })
+    ) {
         NoteColor(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
@@ -47,9 +49,10 @@ fun Note(
             size = 40.dp,
             border = 1.dp
         )
-        Column(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
 
         ) {
             Text(
@@ -74,16 +77,30 @@ fun Note(
             )
         }
         if (note.isCheckedOff != null) {
-        Checkbox(
-            checked = note.isCheckedOff,
-            onCheckedChange = { },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterVertically)
-        )
+            Checkbox(
+                checked = note.isCheckedOff,
+                onCheckedChange = { isChecked ->
+                    val newNote = note.copy(isCheckedOff = isChecked)
+                    onNoteCheckedChange(newNote)
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterVertically)
+            )
+        }
     }
 }
+
 @Preview
 @Composable
-private fun NotePreview() { Note()
+private fun NotePreview() {
+
+    Note(
+        note = NoteModel(
+            1,
+            "Заметки 1",
+            "Содержимое 1",
+            null)
+        )
 }
+
